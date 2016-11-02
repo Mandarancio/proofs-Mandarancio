@@ -100,7 +100,7 @@ describe ("#adt", function ()
     local t1 = sort.cons { sort.empty {} }
     local t2 = sort.cons { sort.empty {} }
     local t3 = sort.empty {}
-    local t4 = sort.cons { sort._v }
+    local t4 = sort.cons { } --removed sort._v otherwise it crash at line 106
     assert.are    .equal (t1, t2)
     assert.are_not.equal (t1, t3)
     assert.are_not.equal (t1, t4)

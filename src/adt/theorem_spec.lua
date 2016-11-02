@@ -79,6 +79,18 @@ describe ("#theorem", function ()
     })
   end)
 
+  it ("can apply symmetry on equal", function()
+    local theorem = Theorem.symmetry (Theorem {
+      Boolean.True  {},
+      Boolean.Equals { Boolean.False{}, Boolean.False {} },
+    })
+    assert.are.equal (getmetatable(theorem), Theorem)
+    assert.are.equal (theorem, Theorem {
+      Boolean.Equals{ Boolean.False{},Boolean.False{}},
+      Boolean.True{},
+    })
+  end)
+
   it ("can apply transitivity", function ()
     local t1 = Theorem {
       Boolean._v,

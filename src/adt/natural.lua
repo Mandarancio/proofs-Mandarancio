@@ -33,4 +33,44 @@ Natural [Adt.axioms].addition_nonzero = Adt.axiom {
 
 -- TODO: define axioms for other operations
 
+Natural [Adt.axioms].dec_zero = Adt.axiom{
+  Natural.Decrement{Natural.Zero{}},
+  Natural.Zero{}
+}
+
+Natural [Adt.axioms].dec_suc_zero = Adt.axiom{ --it's even need?
+  Natural.Decrement{Natural.Successor{Natural.Zero{}}},
+  Natural.Zero{}
+}
+
+Natural [Adt.axioms].dec_suc_x = Adt.axiom{
+  Natural.Decrement{Natural.Successor{Natural._x}},
+  Natural._x,
+}
+
+Natural [Adt.axioms].sub_0=Adt.axiom{
+  Natural.Subtraction{Natural._x,Natural.Zero{}},
+  Natural._x
+}
+
+Natural [Adt.axioms].sub_nonzero = Adt.axioms{
+  Natural.Subtraction{ Natural._x, Natural.Decrement{Natural._y}},
+  Natural.Decrement{Natural.Subtraction{Natural._x,Natural._y}}
+}
+
+Natural [Adt.axioms].is_even_0 = Adt.axioms{ --is natural at the beginning?
+  Boolean.Is_even{Natural.Zero{}},
+  Boolean.True{}
+}
+--
+-- Natural [Adt.axioms].is_even_1 = Adt.axioms{
+--   Boolean.Is_even{Natural.Successor{Natural.Zero{}}},
+--   Boolean.False{}
+-- }
+
+Natural [Adt.axioms].is_even_x = Adt.axioms{
+  Boolean.Is_even{Natural.Successor{Natural._x}},
+  Boolean.Not{Boolean.Is_even{Natural._x}}
+}
+
 return Natural
