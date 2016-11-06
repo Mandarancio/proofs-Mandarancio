@@ -144,6 +144,9 @@ function Term.__tostring (term)
 end
 
 function Term.__eq (lhs, rhs)
+  if getmetatable (lhs) ~= getmetatable (rhs) then
+    return false
+  end
   assert (getmetatable (lhs) == Term,
           "lhs must be a term or a variable")
   assert (getmetatable (rhs) == Term,
