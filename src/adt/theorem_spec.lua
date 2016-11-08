@@ -200,7 +200,22 @@ describe ("#theorem", function ()
   end)
 
   it ("can check x + y = y + x", function ()
-    local theorem
+    -- x + 0 = x
+    local t1 = Theorem.axiom (Natural [Adt.axioms].addition_zero)
+    -- x + s(y) = s(x + y)
+    local t2 = Theorem.axiom (Natural [Adt.axioms].addition_nonzero)
+    -- x + y = y + x
+    local conjecture = Theorem.Conjecture{
+      Natural.Addition{Natural._x, Natural._y},
+      Natural.Addition{Natural._y, Natural._x}
+    }
+    local theorem = Theorem.inductive(conjecture, conjecture.variables[Natural._x],{
+      [Natural.Zero] = function(t)
+        
+      end,
+      [Natural.Successor] = function(t)
+      end
+    });
     assert.are.equal (getmetatable (theorem), Theorem)
   end)
 

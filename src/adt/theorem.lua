@@ -203,6 +203,7 @@ function Theorem.transitivity (lhs, rhs)
 end
 
 function Theorem.substitutivity (operation, operands)
+
   assert (getmetatable (operation) == Adt.Operation,
           "operation must be a term")
   assert (type (operands) == "table",
@@ -217,11 +218,35 @@ function Theorem.substitutivity (operation, operands)
   Fun.frommap (operands)
     : each (function (_, v) all_variables (v, variables) end)
   -- TODO: apply `operation` on left and right part of `operands`
+
+  local lhs = operands[1][1];
+  local rhs = operands[1][2];
+
+  -- Fun.each(function(op)
+  --   lhs[#lhs+1]= operation{op[1]};
+  --   rhs[#rhs+1]= operation{op[2]};
+  -- end, operands);
+
+  local when;
+  if lhs.when and rhs.when then
+    when = Boolean.And {
+      lhs.when,
+      rhs.when / variables,
+    }
+  elseif lhs.when then
+    when = lhs.when
+  elseif rhs.when then
+    when = rhs.when / variables
+  end
+
+  lhs = operation{lhs};
+  rhs = operation{rhs};
+
   return Theorem {
     variables = variables,
     when = when,
-    [1]  = operation (lhs),
-    [2]  = operation (rhs),
+    [1]  = lhs,
+    [2]  = rhs,
   }
 end
 
@@ -235,6 +260,29 @@ function Theorem.substitution (theorem, variable, replacement)
   assert (variable [Adt.Sort] == replacement [Adt.Sort],
           "variable and replacement must be of the same sort")
   -- TODO: repolace `variable` by `replacement` in `theorem`
+
+
+  local variables  ={};
+
+  local lhs = theorem[1];
+  local rhs = theorem[2];
+
+  local when;
+  if lhs.when and rhs.when then
+    when = Boolean.And {
+      lhs.when,
+      rhs.when / variables,
+    }
+  elseif lhs.when then
+    when = lhs.when
+  elseif rhs.when then
+    when = rhs.when / variables
+  end
+  local mapping = {};
+  mapping[variable]=replacement;
+  lhs = lhs / mapping;
+  rhs = rhs / mapping;
+
   return Theorem {
     variables = all_variables (theorem),
     when = when,
@@ -304,6 +352,15 @@ function Theorem.inductive (conjecture, variable, t)
   if generators:all (function (_, operation)
     -- TODO: check that the theorem built by applying `operation` on `variable`
     -- corresponds to the conjecture.
+    local mapping = {}
+    mapping[variable]=operation{};
+    local lhs = conjecture[1];
+    local rhs = conjecture[2];
+    lhs = lhs / mapping;
+    rhs = rhs / mapping;
+    local teo = Theorem{lhs,rhs}
+    local r = t[operation](teo)
+    return r==result;
   end) then
     return result
   else

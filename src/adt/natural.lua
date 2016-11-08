@@ -1,4 +1,4 @@
-local Fun     = require "fun"
+      local Fun     = require "fun"
 local Adt     = require "adt"
 local Boolean = require "adt.boolean"
 local Natural = Adt.Sort "Natural"
@@ -53,12 +53,12 @@ Natural [Adt.axioms].sub_0=Adt.axiom{
   Natural._x
 }
 
-Natural [Adt.axioms].sub_nonzero = Adt.axioms{
+Natural [Adt.axioms].sub_nonzero = Adt.axiom{
   Natural.Subtraction{ Natural._x, Natural.Decrement{Natural._y}},
   Natural.Decrement{Natural.Subtraction{Natural._x,Natural._y}}
 }
 
-Natural [Adt.axioms].is_even_0 = Adt.axioms{ --is natural at the beginning?
+Natural [Adt.axioms].is_even_0 = Adt.axiom{ --is natural at the beginning?
   Boolean.Is_even{Natural.Zero{}},
   Boolean.True{}
 }
@@ -68,7 +68,7 @@ Natural [Adt.axioms].is_even_0 = Adt.axioms{ --is natural at the beginning?
 --   Boolean.False{}
 -- }
 
-Natural [Adt.axioms].is_even_x = Adt.axioms{
+Natural [Adt.axioms].is_even_x = Adt.axiom{
   Boolean.Is_even{Natural.Successor{Natural._x}},
   Boolean.Not{Boolean.Is_even{Natural._x}}
 }
