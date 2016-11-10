@@ -336,7 +336,7 @@ describe ("#theorem", function ()
 
   it ("can check x + y = y + x", function ()
     -- x + 0 = x
-    local t1 = Theorem.axiom (Natural [Adt.axioms].addition_zero)
+    -- local t1 = Theorem.axiom (Natural [Adt.axioms].addition_zero)
     -- x + s(y) = s(x + y)
     local t2 = Theorem.axiom (Natural [Adt.axioms].addition_nonzero)
     -- x + 0 = 0+x as proved before
@@ -357,7 +357,6 @@ describe ("#theorem", function ()
       end,
       --s(x)+y=y+s(x)
       [Natural.Successor] = function(t)
-        print()
         -- y=y
         local t6 = Theorem.reflexivity(Natural._y)
         -- y+s(x)=y+(x+s(0))
