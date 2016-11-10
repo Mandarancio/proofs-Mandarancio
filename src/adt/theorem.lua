@@ -218,33 +218,19 @@ function Theorem.substitutivity (operation, operands)
   Fun.frommap (operands)
     : each (function (_, v) all_variables (v, variables) end)
   -- TODO: apply `operation` on left and right part of `operands`
-
-  local lhs = operands[1][1];
-  local rhs = operands[1][2];
-
-  -- Fun.each(function(op)
-  --   lhs[#lhs+1]= operation{op[1]};
-  --   rhs[#rhs+1]= operation{op[2]};
-  -- end, operands);
-
-  local when;
-  if lhs.when and rhs.when then
-    when = Boolean.And {
-      lhs.when,
-      rhs.when / variables,
-    }
-  elseif lhs.when then
-    when = lhs.when
-  elseif rhs.when then
-    when = rhs.when / variables
+  local lhs;
+  local rhs;
+  if (#operands==1) then
+    lhs = operation{operands[1][1]};
+    rhs = operation{operands[1][2]};
+  elseif (#operands==2) then
+    lhs = operation{operands[1][1],operands[2][1]};
+    rhs = operation{operands[1][2],operands[2][2]};
   end
 
-  lhs = operation{lhs};
-  rhs = operation{rhs};
 
   return Theorem {
     variables = variables,
-    when = when,
     [1]  = lhs,
     [2]  = rhs,
   }
