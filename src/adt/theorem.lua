@@ -248,7 +248,6 @@ function Theorem.substitution (theorem, variable, replacement)
   -- TODO: repolace `variable` by `replacement` in `theorem`
 
 
-  local variables  ={};
 
   local lhs = theorem[1];
   local rhs = theorem[2];
