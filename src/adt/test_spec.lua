@@ -169,11 +169,13 @@ describe ("#test", function ()
             --y + 0 = y
             --local t5 = Theorem.substitution(t1,t1.variables[Natural._x],Natural._y)
             -- print(t5)
-            local t5 = Theorem{Natural._x,Natural._x}
-            print(t5)
+
             -- print(getmetatable(Natural.Successor{Natural._x}))
-            local t6 = Theorem.substitutivity(Natural.Addition, {t5,t1})
-            -- print(t6)
+            local t7 = Theorem{Natural._x,Natural._x}
+            local t6 = Theorem.substitutivity(Natural.Addition, {t7,t1})
+            print(t6)
+            local t5 = Theorem.reflexivity(Natural._x)
+            print(t5)
             print("\n####\n")
             return t
         end,
