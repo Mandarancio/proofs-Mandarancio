@@ -233,62 +233,57 @@ describe ("#theorem", function ()
     assert.are.equal (getmetatable (theorem), Theorem)
   end)
 
-  it ("can check x+1 = s(x)", function ()
-    -- x + 0 = x
-    local t1 = Theorem.axiom (Natural [Adt.axioms].addition_zero)
-    -- x + s(y) = s(x + y)
-    local t2 = Theorem.axiom (Natural [Adt.axioms].addition_nonzero)
-    -- 0+x = x+0 =  x(identity of 0, proved before)
-    -- local t3 = Theorem.axiom(Adt.axiom{Natural.Addition{Natural.Zero{},Natural._x},Natural._x})
-    -- x + s(0) = s(x)
-    local conjecture = Theorem.Conjecture {
-      Natural.Addition { Natural._x,Natural.Successor{Natural.Zero{}}},
-      Natural.Successor{ Natural._x },
-    }
-    local theorem = Theorem.inductive (conjecture, conjecture.variables [Natural._x], {
-      -- 0+s(0)=s(0)
-      [Natural.Zero     ] = function ()
-        -- x+s(0)=s(x+0)
-        local t4 = Theorem.substitution(t2,t2.variables[Natural._y], Natural.Zero{})
-        -- 0+s(0) = s(0+0)
-        local t5 = Theorem.substitution(t4,t2.variables[Natural._x], Natural.Zero{})
-        -- 0+0 = 0
-        local t6 = Theorem.substitution(t1,t1.variables[Natural._x], Natural.Zero{})
-        -- s(0+0)=s(0)
-        local t7 = Theorem.substitutivity(Natural.Successor,{t6})
+    it ("can check x+1 = s(x)", function ()
+      -- x + 0 = x
+      local t1 = Theorem.axiom (Natural [Adt.axioms].addition_zero)
+      -- x + s(y) = s(x + y)
+      local t2 = Theorem.axiom (Natural [Adt.axioms].addition_nonzero)
+      -- 0+x = x+0 =  x(identity of 0, proved before)
+      -- local t3 = Theorem.axiom(Adt.axiom{Natural.Addition{Natural.Zero{},Natural._x},Natural._x})
+      -- x + s(0) = s(x)
+      local conjecture = Theorem.Conjecture {
+        Natural.Addition { Natural._x,Natural.Successor{Natural.Zero{}}},
+        Natural.Successor{ Natural._x },
+      }
+      local theorem = Theorem.inductive (conjecture, conjecture.variables [Natural._x], {
         -- 0+s(0)=s(0)
-        local t8 = Theorem.transitivity(t5,t7)
-        return t8
-      end,
-      -- x+s(0)=s(x)
-      [Natural.Successor] = function ()
-        -- print("\n####\n")
-        -- print(t)
-        --x+s(0) =  s(x+0)
-        local t4 = Theorem.substitution(t2,t2.variables[Natural._y], Natural.Zero{})
-        -- print(t4)
-        -- s(x+0)=s(x)
-        local t5 = Theorem.substitutivity(Natural.Successor,{t1})
-        -- print(t5)
+        [Natural.Zero     ] = function ()
+          -- x+s(0)=s(x+0)
+          local t4 = Theorem.substitution(t2,t2.variables[Natural._y], Natural.Zero{})
+          -- 0+s(0) = s(0+0)
+          local t5 = Theorem.substitution(t4,t2.variables[Natural._x], Natural.Zero{})
+          -- 0+0 = 0
+          local t6 = Theorem.substitution(t1,t1.variables[Natural._x], Natural.Zero{})
+          -- s(0+0)=s(0)
+          local t7 = Theorem.substitutivity(Natural.Successor,{t6})
+          -- 0+s(0)=s(0)
+          local t8 = Theorem.transitivity(t5,t7)
+          return t8
+        end,
         -- x+s(0)=s(x)
-        local t6 = Theorem.transitivity(t4,t5)
-        -- print(t6)
-        -- print("\n####\n")
-        return t6
-      end,
-    })
-    assert.are.equal (getmetatable (theorem), Theorem)
-  end)
+        [Natural.Successor] = function ()
 
-it ("can check associatif proof", function ()
+          --x+s(0) =  s(x+0)
+          local t4 = Theorem.substitution(t2,t2.variables[Natural._y], Natural.Zero{})
+          -- s(x+0)=s(x)
+          local t5 = Theorem.substitutivity(Natural.Successor,{t1})
+          -- x+s(0)=s(x)
+          local t6 = Theorem.transitivity(t4,t5)
+          return t6
+        end,
+      })
+      assert.are.equal (getmetatable (theorem), Theorem)
+    end)
+
+    it ("can check associatif proof", function ()
       -- x + 0 = x
       local t1 = Theorem.axiom (Natural [Adt.axioms].addition_zero)
       -- x + s(y) = s(x + y)
       local t2 = Theorem.axiom (Natural [Adt.axioms].addition_nonzero)
       -- 0+x = x (identity of 0, proved before)
-      local t3 = Theorem.axiom(Adt.axiom{Natural.Addition{Natural.Zero{},Natural._x},Natural._x})
+      -- local t3 = Theorem.axiom(Adt.axiom{Natural.Addition{Natural.Zero{},Natural._x},Natural._x})
       -- x+1 = s(x) (as proved before)
-      local t4 = Theorem.axiom(Adt.axiom{Natural.Addition{Natural._x,Natural.Successor{Natural.Zero{}}},Natural.Successor{Natural._x}})
+      -- local t4 = Theorem.axiom(Adt.axiom{Natural.Addition{Natural._x,Natural.Successor{Natural.Zero{}}},Natural.Successor{Natural._x}})
       -- (x+y)+z=x+(x+y)
       local conjecture = Theorem.Conjecture {
         Natural.Addition{Natural.Addition { Natural._x,Natural._y},Natural._z},
@@ -312,7 +307,7 @@ it ("can check associatif proof", function ()
             return t10
         end,
         -- (x+y)+s(z) = x+(y+s(z))
-        [Natural.Successor] = function (t)
+        [Natural.Successor] = function ()
           -- x+s(z) = s(x+z)
           local t5 = Theorem.substitution(t2,t2.variables[Natural._y],Natural._z)
           -- y+s(z) = s(y+z)

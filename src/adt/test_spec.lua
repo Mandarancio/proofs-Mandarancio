@@ -137,18 +137,13 @@ describe ("#test", function ()
         end,
         -- x+s(0)=s(x)
         [Natural.Successor] = function ()
-          -- print("\n####\n")
-          -- print(t)
+
           --x+s(0) =  s(x+0)
           local t4 = Theorem.substitution(t2,t2.variables[Natural._y], Natural.Zero{})
-          -- print(t4)
           -- s(x+0)=s(x)
           local t5 = Theorem.substitutivity(Natural.Successor,{t1})
-          -- print(t5)
           -- x+s(0)=s(x)
           local t6 = Theorem.transitivity(t4,t5)
-          -- print(t6)
-          -- print("\n####\n")
           return t6
         end,
       })
@@ -161,9 +156,9 @@ describe ("#test", function ()
       -- x + s(y) = s(x + y)
       local t2 = Theorem.axiom (Natural [Adt.axioms].addition_nonzero)
       -- 0+x = x (identity of 0, proved before)
-      local t3 = Theorem.axiom(Adt.axiom{Natural.Addition{Natural.Zero{},Natural._x},Natural._x})
+      -- local t3 = Theorem.axiom(Adt.axiom{Natural.Addition{Natural.Zero{},Natural._x},Natural._x})
       -- x+1 = s(x) (as proved before)
-      local t4 = Theorem.axiom(Adt.axiom{Natural.Addition{Natural._x,Natural.Successor{Natural.Zero{}}},Natural.Successor{Natural._x}})
+      -- local t4 = Theorem.axiom(Adt.axiom{Natural.Addition{Natural._x,Natural.Successor{Natural.Zero{}}},Natural.Successor{Natural._x}})
       -- (x+y)+z=x+(x+y)
       local conjecture = Theorem.Conjecture {
         Natural.Addition{Natural.Addition { Natural._x,Natural._y},Natural._z},
@@ -187,7 +182,7 @@ describe ("#test", function ()
             return t10
         end,
         -- (x+y)+s(z) = x+(y+s(z))
-        [Natural.Successor] = function (t)
+        [Natural.Successor] = function ()
           -- x+s(z) = s(x+z)
           local t5 = Theorem.substitution(t2,t2.variables[Natural._y],Natural._z)
           -- y+s(z) = s(y+z)
