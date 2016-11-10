@@ -353,14 +353,23 @@ function Theorem.inductive (conjecture, variable, t)
     -- TODO: check that the theorem built by applying `operation` on `variable`
     -- corresponds to the conjecture.
     local mapping = {}
-    mapping[variable]=operation{};
+    if #operation==0 then
+      mapping[variable]=operation{};
+    else
+      mapping[variable]=operation{variable};
+    end
     local lhs = conjecture[1];
     local rhs = conjecture[2];
     lhs = lhs / mapping;
     rhs = rhs / mapping;
     local teo = Theorem{lhs,rhs}
     local r = t[operation](teo)
-    return r==result;
+    -- print('\n----\n')
+    -- print(r)
+    -- print(teo)
+    -- print(r==teo)
+    -- print('\n----\n')
+    return r==teo;
   end) then
     return result
   else
