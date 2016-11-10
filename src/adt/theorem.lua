@@ -241,8 +241,8 @@ function Theorem.substitution (theorem, variable, replacement)
           "theorem must be a term")
   assert (getmetatable (variable) == Adt.Variable,
           "variable must be a variable")
-  assert (getmetatable (replacement) == Adt.Term,
-          "replacement must be a term")
+  assert (getmetatable (replacement) == Adt.Term or getmetatable (replacement) == Adt.Variable,
+          "replacement must be a term or a variable")
   assert (variable [Adt.Sort] == replacement [Adt.Sort],
           "variable and replacement must be of the same sort")
   -- TODO: repolace `variable` by `replacement` in `theorem`

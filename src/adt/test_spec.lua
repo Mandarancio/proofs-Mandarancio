@@ -171,27 +171,44 @@ describe ("#test", function ()
       }
       local theorem = Theorem.inductive (conjecture, conjecture.variables [Natural._z], {
         --(x+y)+0=x+(y+0)
-        [Natural.Zero     ] = function (t)
-            -- s((x+y)+0)=(x+y)+s(0) --> s((x+y)+0)=s(x+y)
-            -- s(x+(y+0))=x+s(y+0) --> s(x+(y+0))=x+s(y)->s(x+(y+0))=s(x+y)
-
---            print("\n####\n")
-            --y + 0 = y
-            --local t5 = Theorem.substitution(t1,t1.variables[Natural._x],Natural._y)
-            -- print(t5)
-
-            -- print(getmetatable(Natural.Successor{Natural._x}))
-            local t7 = Theorem.reflexivity(Natural._x)
-            local t6 = Theorem.substitutivity(Natural.Addition, {t7,t1})
---            print(t6)
---            print("\n####\n")
-            return t
+        [Natural.Zero     ] = function ()
+            --x=x 
+            local t5 = Theorem.reflexivity(Natural._y)
+            --y+0=y
+            local t6 = Theorem.substitution(t1,t1.variables[Natural._x],Natural._y)
+            --x+(y+0)=x+y
+            local t7 = Theorem.substitutivity(Natural.Addition,{t5,t6})
+            -- (x+y)+0 = x+y
+            local t8 = Theorem.substitution(t1,t1.variables[Natural._x],Natural.Addition{Natural._x,Natural._y})
+            -- x+y = x+(y+0)
+            local t9 = Theorem.symmetry(t7)
+            -- (x+y)+0 = x+(y+0)
+            local t10 = Theorem.transitivity(t8,t9)
+            return t10
         end,
+        -- (x+y)+s(z) = x+(y+s(z))
         [Natural.Successor] = function (t)
-          -- print('\n####\n')
-          -- print(t)
-          -- print('\n####\n')
-          return t
+          -- x+s(z) = s(x+z)
+          local t5 = Theorem.substitution(t2,t2.variables[Natural._y],Natural._z)
+          -- y+s(z) = s(y+z)
+          local t6 = Theorem.substitution(t5,t2.variables[Natural._x],Natural._y)
+          -- x = x
+          local t7 = Theorem.reflexivity(Natural._x)
+          --x+(y+s(z))=x+s(y+z)
+          local t8 = Theorem.substitutivity(Natural.Addition,{t7,t6})
+          --(x+y)+s(z)=s((x+y)+z)
+          local t9 = Theorem.substitution(t5, t2.variables[Natural._y],Natural.Addition{Natural._x,Natural._y})
+          --s((x+y)+z) = s(x+(y+z))
+          local t10 = Theorem.substitutivity(Natural.Successor,{ Theorem.conjecture (conjecture)})
+          -- x+s(y+z) = s(x+(y+z))
+          local t11 = Theorem.substitution(t2,t2.variables[Natural._y],Natural.Addition{Natural._y,Natural._z})
+          -- x+(y+s(z))=s(x+(y+z))
+          local t12 = Theorem.transitivity(t8,t11)
+          -- (x+y)+s(z)= s(x+(y+z))
+          local t13 = Theorem.transitivity(t9,t10)
+          -- (x+y)+s(z)= x+(y+s(z))
+          local t14  = Theorem.transitivity(t13,Theorem.symmetry(t12))
+          return t14
         end,
       })
       assert.are.equal (getmetatable (theorem), Theorem)
