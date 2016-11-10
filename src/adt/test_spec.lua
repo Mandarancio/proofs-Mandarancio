@@ -35,7 +35,17 @@ describe ("#test", function ()
         when = Boolean.True {},
       })
     end)
-
+    it ("can apply advanced substitutivity", function ()
+      local t1 = Theorem.axiom (Natural [Adt.axioms].addition_zero)
+      local t2 = Theorem{
+        Natural.Addition{Natural._y, Natural.Addition{Natural._x,Natural.Zero{}}},
+        Natural.Addition{Natural._y, Natural._x}
+      }
+      local t3 = Theorem.reflexivity(Natural._y)
+      local theorem = Theorem.substitutivity (Natural.Addition, { t3,t1 })
+      assert.are.equal (getmetatable (theorem), Theorem)
+      assert.are.equal (theorem,t2)
+    end)
     -- it ("can check an inductive proof", function ()
     --   -- x + 0 = x
     --   local t1 = Theorem.axiom (Natural [Adt.axioms].addition_zero)
@@ -165,7 +175,7 @@ describe ("#test", function ()
             -- s((x+y)+0)=(x+y)+s(0) --> s((x+y)+0)=s(x+y)
             -- s(x+(y+0))=x+s(y+0) --> s(x+(y+0))=x+s(y)->s(x+(y+0))=s(x+y)
 
-            print("\n####\n")
+--            print("\n####\n")
             --y + 0 = y
             --local t5 = Theorem.substitution(t1,t1.variables[Natural._x],Natural._y)
             -- print(t5)
@@ -173,9 +183,9 @@ describe ("#test", function ()
             -- print(getmetatable(Natural.Successor{Natural._x}))
             local t7 = Theorem.reflexivity(Natural._x)
             local t6 = Theorem.substitutivity(Natural.Addition, {t7,t1})
-            print(t6)
-            print("\n####\n")
-            return t6
+--            print(t6)
+--            print("\n####\n")
+            return t
         end,
         [Natural.Successor] = function (t)
           -- print('\n####\n')
