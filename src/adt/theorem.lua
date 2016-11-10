@@ -152,8 +152,8 @@ function Theorem.axiom (axiom)
 end
 
 function Theorem.reflexivity (term)
-  assert (getmetatable (term) == Adt.Term,
-          "parameter must be a term")
+  assert (getmetatable (term) == Adt.Term or getmetatable (term) == Adt.Variable,
+          "parameter must be a term or a variable")
   return Theorem {
     variables = all_variables (term),
     [1] = term,

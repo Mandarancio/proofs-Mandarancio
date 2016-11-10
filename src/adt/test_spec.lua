@@ -171,13 +171,11 @@ describe ("#test", function ()
             -- print(t5)
 
             -- print(getmetatable(Natural.Successor{Natural._x}))
-            local t7 = Theorem{Natural._x,Natural._x}
+            local t7 = Theorem.reflexivity(Natural._x)
             local t6 = Theorem.substitutivity(Natural.Addition, {t7,t1})
             print(t6)
-            local t5 = Theorem.reflexivity(Natural._x)
-            print(t5)
             print("\n####\n")
-            return t
+            return t6
         end,
         [Natural.Successor] = function (t)
           -- print('\n####\n')
