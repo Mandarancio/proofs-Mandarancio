@@ -253,17 +253,6 @@ function Theorem.substitution (theorem, variable, replacement)
   local lhs = theorem[1];
   local rhs = theorem[2];
 
-  local when;
-  if lhs.when and rhs.when then
-    when = Boolean.And {
-      lhs.when,
-      rhs.when / variables,
-    }
-  elseif lhs.when then
-    when = lhs.when
-  elseif rhs.when then
-    when = rhs.when / variables
-  end
   local mapping = {};
   mapping[variable]=replacement;
   lhs = lhs / mapping;
@@ -271,7 +260,7 @@ function Theorem.substitution (theorem, variable, replacement)
 
   return Theorem {
     variables = all_variables (theorem),
-    when = when,
+    when = theorem.when,
     [1]  = lhs,
     [2]  = rhs,
   }

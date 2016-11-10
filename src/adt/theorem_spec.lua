@@ -292,7 +292,7 @@ describe ("#theorem", function ()
       local theorem = Theorem.inductive (conjecture, conjecture.variables [Natural._z], {
         --(x+y)+0=x+(y+0)
         [Natural.Zero     ] = function ()
-            --x=x 
+            --x=x
             local t5 = Theorem.reflexivity(Natural._y)
             --y+0=y
             local t6 = Theorem.substitution(t1,t1.variables[Natural._x],Natural._y)
@@ -346,16 +346,16 @@ describe ("#theorem", function ()
       Natural.Addition{Natural._y, Natural._x}
     }
     local theorem = Theorem.inductive(conjecture, conjecture.variables[Natural._x],{
-      --0+x = x+0
+      --0+y = y+0
       [Natural.Zero] = function()
         local t4 = Theorem.symmetry(t3)
         return t4
       end,
+      --s(x)+y=y+s(x)
       [Natural.Successor] = function(t)
-        -- no proof
-        -- substitutivity donsn't work properly
-        -- reflexivity doesn't work properly
-
+        --y+s(x)=y+(x+s(0))
+        --s(x)+y=(x+s(0))+y
+        --
         return t
       end
     });
