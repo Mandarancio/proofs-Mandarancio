@@ -336,11 +336,15 @@ describe ("#theorem", function ()
 
   it ("can check x + y = y + x", function ()
     -- x + 0 = x
-    -- local t1 = Theorem.axiom (Natural [Adt.axioms].addition_zero)
+    local t1 = Theorem.axiom (Natural [Adt.axioms].addition_zero)
     -- x + s(y) = s(x + y)
-    -- local t2 = Theorem.axiom (Natural [Adt.axioms].addition_nonzero)
+    local t2 = Theorem.axiom (Natural [Adt.axioms].addition_nonzero)
     -- x + 0 = 0+x as proved before
     local t3 = Theorem.axiom (Adt.axiom{Natural.Addition{Natural._x,Natural.Zero{}}, Natural.Addition{Natural.Zero{},Natural._x}})
+    -- (x+y)+z = x+(y+z) as proved before
+    local t4 = Theorem.axiom(Adt.axiom{Natural.Addition{Natural.Addition{Natural._x,Natural._y},Natural._z},Natural.Addition{Natural._x,Natural.Addition{Natural._y,Natural._z}}})
+    -- x+s(0)=s(x) as proved before
+    local t5 = Theorem.axiom(Adt.axiom{Natural.Addition{Natural._x,Natural.Successor{Natural.Zero{}}},Natural.Successor{Natural._x}})
     local conjecture = Theorem.Conjecture{
       Natural.Addition{Natural._x, Natural._y},
       Natural.Addition{Natural._y, Natural._x}
@@ -348,15 +352,29 @@ describe ("#theorem", function ()
     local theorem = Theorem.inductive(conjecture, conjecture.variables[Natural._x],{
       --0+y = y+0
       [Natural.Zero] = function()
-        local t4 = Theorem.symmetry(t3)
-        return t4
+        local t6 = Theorem.symmetry(t3)
+        return t6
       end,
       --s(x)+y=y+s(x)
       [Natural.Successor] = function(t)
-        --y+s(x)=y+(x+s(0))
-        --s(x)+y=(x+s(0))+y
-        --
-        return t
+        print()
+        -- y=y
+        local t6 = Theorem.reflexivity(Natural._y)
+        -- y+s(x)=y+(x+s(0))
+        local t7 = Theorem.substitutivity(Natural.Addition,{t6,t5})
+        -- x+(y+s(0))=(x+y)+s(0)
+        local t8 = Theorem.symmetry(Theorem.substitution(t4,t4.variables[Natural._z],Natural.Successor{Natural.Zero{}}))
+        -- y +s(x) = (y+x)+s(0)
+        local t9 = Theorem.transitivity(Theorem.symmetry(t7),t8)
+        -- s(x)+y = s(x+y)
+        local t10 = Theorem.transitivity(t,t2)
+        --s(x+y)=(x+y)+s(0)
+        local t11 = Theorem.symmetry(Theorem.substitution(t5,t5.variables[Natural._x],Natural.Addition{Natural._x,Natural._y}))
+        --s(x)+y = (x+y)+s(0)
+        local t12 = Theorem.transitivity(t10,t11)
+        --s(x)+y=y+s(x)
+        local t13 = Theorem.transitivity(t12,Theorem.symmetry(t9))
+        return t13
       end
     });
     assert.are.equal (getmetatable (theorem), Theorem)
