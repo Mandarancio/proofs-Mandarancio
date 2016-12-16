@@ -47,6 +47,9 @@ local function all_variables (x, variables)
   if getmetatable (x) == Adt.Axiom
   or getmetatable (x) == Theorem
   or getmetatable (x) == Conjecture then
+    Fun.frommap (x.variables or {}):each (function (k, v)
+      variables [k] = v
+    end)
     all_variables (x.when, variables)
     all_variables (x [1] , variables)
     all_variables (x [2] , variables)
@@ -205,10 +208,9 @@ end
 function Theorem.substitutivity (operation, operands)
 
   assert (getmetatable (operation) == Adt.Operation,
-          "operation must be a term")
+          "operation must be an operation")
   assert (type (operands) == "table",
-          "operands must be a table")
-
+          "operands must be a table of theorems")
   Fun.frommap (operands)
     : each (function (k, v)
               assert (getmetatable (v) == Theorem,
@@ -238,14 +240,14 @@ end
 
 function Theorem.substitution (theorem, variable, replacement)
   assert (getmetatable (theorem) == Theorem,
-          "theorem must be a term")
+          "theorem must be a theorem")
   assert (getmetatable (variable) == Adt.Variable,
           "variable must be a variable")
   assert (getmetatable (replacement) == Adt.Term or getmetatable (replacement) == Adt.Variable,
           "replacement must be a term or a variable")
   assert (variable [Adt.Sort] == replacement [Adt.Sort],
           "variable and replacement must be of the same sort")
-  -- TODO: repolace `variable` by `replacement` in `theorem`
+  -- TODO: replace `variable` by `replacement` in `theorem`
 
 
 
@@ -267,7 +269,7 @@ end
 
 function Theorem.cut (theorem, replacement)
   assert (getmetatable (theorem) == Theorem,
-          "theorem must be a term")
+          "theorem must be a theorem")
   assert (getmetatable (replacement) == Theorem,
           "replacement must be a theorem")
   if not theorem.when then
