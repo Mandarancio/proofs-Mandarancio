@@ -313,18 +313,20 @@ Evaluation follows the questions:
 
 * do you have done anything at the deadline?
   (no: 0 points)
-  * [ ] Done anything
+  * [x] Done anything
 * do you have understood and implemented all the required notions?
   (yes: 4 points for all, no: 2 points for none)
+  * [x]
 * do you have understood and implemented corners cases of all the required
   notions?
   (yes: +2 point for all)
+  * [x]
 * do you have correctly written and tested your code?
   (no: -0.5 point for each)
-  * [ ] Coding standards
-  * [ ] Tests
-  * [ ] Code coverage
+  * [x] Coding standards
+  * [x] Tests
+  * [x] Code coverage
 
 | Grade |
 | ----- |
-|       |
+|   6   |
