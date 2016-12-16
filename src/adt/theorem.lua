@@ -47,6 +47,9 @@ local function all_variables (x, variables)
   if getmetatable (x) == Adt.Axiom
   or getmetatable (x) == Theorem
   or getmetatable (x) == Conjecture then
+    Fun.frommap (x.variables or {}):each (function (k, v)
+      variables [k] = v
+    end)
     all_variables (x.when, variables)
     all_variables (x [1] , variables)
     all_variables (x [2] , variables)
